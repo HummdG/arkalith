@@ -16,14 +16,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Arkalith - Innovation Meets Excellence",
+  // Updated title - will show as "Arkalith" in search results
+  title: {
+    default: "Arkalith",
+    template: "%s | Arkalith",
+  },
+
+  // Alternative single title approach:
+  // title: "Arkalith",
+
   description:
-    "We craft extraordinary digital experiences that push boundaries, solve complex problems, and transform industries through cutting-edge technology.",
+    "World-class experts in AI, technology, and innovation working together to build the future.",
   keywords:
-    "technology, innovation, digital transformation, AI, machine learning, cybersecurity, product development",
+    "Arkalith, AI, artificial intelligence, technology, innovation, digital transformation, machine learning, Imperial College",
   authors: [{ name: "Arkalith Team" }],
   creator: "Arkalith",
   publisher: "Arkalith",
+
+  // Add structured data for better search results
+  applicationName: "Arkalith",
 
   // Updated favicon configuration
   icons: {
@@ -39,34 +50,35 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
   },
 
-  // Add manifest
   manifest: "/manifest.json",
 
   openGraph: {
-    title: "Arkalith - Innovation Meets Excellence",
+    title: "Arkalith", // This is key for social sharing
     description:
-      "We craft extraordinary digital experiences that push boundaries, solve complex problems, and transform industries through cutting-edge technology.",
+      "World-class experts in AI, technology, and innovation working together to build the future.",
     type: "website",
     locale: "en_US",
     url: "https://arkalith.com",
     siteName: "Arkalith",
-    // Add this for better social sharing
     images: [
       {
-        url: "/og-image.png", // You'll need to create this 1200x630px image
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Arkalith - Innovation Meets Excellence",
+        alt: "Arkalith - AI & Technology Innovation",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "Arkalith - Innovation Meets Excellence",
+    title: "Arkalith", // Also important for Twitter
     description:
-      "We craft extraordinary digital experiences that push boundaries, solve complex problems, and transform industries through cutting-edge technology.",
+      "World-class experts in AI, technology, and innovation working together to build the future.",
     images: ["/og-image.png"],
+    creator: "@arkalith", // Add your Twitter handle if you have one
   },
+
   robots: {
     index: true,
     follow: true,
@@ -78,6 +90,12 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+
+  // Add verification meta tags if you have them
+  verification: {
+    google: "your-google-verification-code", // Replace with actual code from Search Console
+    // bing: "your-bing-verification-code",
+  },
 };
 
 export default function RootLayout({
@@ -88,15 +106,22 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Explicit favicon links for better compatibility */}
+        {/* Explicit meta tags for better control */}
+        <meta name="application-name" content="Arkalith" />
+        <meta name="apple-mobile-web-app-title" content="Arkalith" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="msapplication-TileColor" content="#0f0f23" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content="#0f0f23" />
+
+        {/* Explicit favicon links */}
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
 
-        {/* Additional meta tags for better indexing */}
-        <meta name="theme-color" content="#0f0f23" />
-        <meta name="msapplication-TileColor" content="#0f0f23" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body
