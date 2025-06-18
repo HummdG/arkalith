@@ -1,6 +1,24 @@
+"use client";
+
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   const projects = [
     {
       title: "CAD GPT",
@@ -33,8 +51,19 @@ export default function Home() {
     },
   ];
 
+  const navigationLinks = [
+    { href: "#about", label: "About" },
+    { href: "#services", label: "Services" },
+    { href: "#projects", label: "Projects" },
+    { href: "#team", label: "Team" },
+    { href: "#contact", label: "Contact" },
+  ];
+
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden select-none">
+    <div
+      className="min-h-screen bg-black text-white overflow-hidden select-none"
+      suppressHydrationWarning
+    >
       {/* Background Elements */}
       <div className="fixed inset-0 opacity-20 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
@@ -47,61 +76,133 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-black/90 backdrop-blur-md border-b border-white/10">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 bg-black/90 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-lg">
+          {/* Logo */}
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg">
               <svg
                 viewBox="0 0 24 24"
-                className="w-8 h-8 text-black"
+                className="w-6 h-6 sm:w-8 sm:h-8 text-black"
                 fill="currentColor"
               >
                 <path d="M12 2L1 21h22L12 2z M12 6l7.5 13H4.5L12 6z M9 14h6v2H9v-2z M10 17h4v2h-4v-2z" />
               </svg>
             </div>
-            <span className="text-2xl font-bold text-white">Arkalith</span>
+            <span className="text-xl sm:text-2xl font-bold text-white">
+              Arkalith
+            </span>
           </div>
 
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a
-              href="#about"
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-            >
-              About
-            </a>
-            <a
-              href="#services"
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-            >
-              Services
-            </a>
-            <a
-              href="#projects"
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-            >
-              Projects
-            </a>
-            <a
-              href="#team"
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-            >
-              Team
-            </a>
-            <a
-              href="#contact"
-              className="text-gray-300 hover:text-white transition-colors duration-300"
-            >
-              Contact
-            </a>
+            {navigationLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-gray-300 hover:text-white transition-colors duration-300"
+                onClick={closeMobileMenu}
+              >
+                {link.label}
+              </a>
+            ))}
             <button className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 transform hover:scale-105">
               Get Started
             </button>
           </div>
+
+          {/* Mobile Menu Button */}
+          {isHydrated ? (
+            <button
+              onClick={toggleMobileMenu}
+              className="md:hidden p-2 text-white hover:text-gray-300 transition-colors duration-300"
+              aria-label="Toggle mobile menu"
+            >
+              <svg
+                className={`w-6 h-6 transform transition-transform duration-300 ${
+                  isMobileMenuOpen ? "rotate-90" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {isMobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          ) : (
+            <div className="md:hidden p-2">
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </div>
+          )}
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isHydrated && (
+          <div
+            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+              isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="px-4 py-6 bg-black/95 backdrop-blur-md border-t border-white/10 mt-4 rounded-lg">
+              <div className="flex flex-col space-y-4">
+                {navigationLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="text-gray-300 hover:text-white transition-colors duration-300 py-2 px-4 rounded-lg hover:bg-white/10"
+                    onClick={closeMobileMenu}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <button
+                  className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 mt-4"
+                  onClick={closeMobileMenu}
+                >
+                  Get Started
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
 
+      {/* Overlay for mobile menu */}
+      {isHydrated && isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={closeMobileMenu}
+        ></div>
+      )}
+
       {/* Hero Section */}
-      <section className="relative z-10 px-6 py-20 pt-32">
+      <section className="relative z-10 px-4 sm:px-6 py-20 pt-32">
         <div className="max-w-7xl mx-auto text-center">
           <div className="mb-8">
             <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white text-sm font-medium mb-6">
@@ -109,7 +210,7 @@ export default function Home() {
             </span>
           </div>
 
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
             <span className="text-white">Intelligence</span>
             <br />
             <span className="bg-gradient-to-r from-purple-400 via-teal-400 to-purple-400 bg-clip-text text-transparent">
@@ -117,19 +218,19 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed px-4">
             We harness the power of artificial intelligence and cutting-edge
             technology to solve complex problems and drive digital
             transformation across industries.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="group relative px-8 py-4 bg-white text-black rounded-full font-semibold text-lg overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-white/20">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
+            <button className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-full font-semibold text-base sm:text-lg overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-white/20 w-full sm:w-auto">
               <span className="relative z-10">Start Your Project</span>
             </button>
             <a
               href="#projects"
-              className="px-8 py-4 border-2 border-white/50 rounded-full text-white font-semibold text-lg hover:bg-white/10 hover:border-white transition-all duration-300"
+              className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-white/50 rounded-full text-white font-semibold text-base sm:text-lg hover:bg-white/10 hover:border-white transition-all duration-300 w-full sm:w-auto text-center"
             >
               Explore Projects
             </a>
@@ -143,19 +244,19 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="relative z-10 px-6 py-20">
+      <section id="projects" className="relative z-10 px-4 sm:px-6 py-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
               Featured Projects
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto px-4">
               Discover how we&apos;ve transformed businesses with cutting-edge
               AI solutions and innovative technology.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 justify-items-center">
             {projects.map((project, index) => (
               <div key={index} className="group relative w-full max-w-sm">
                 <div className="absolute inset-0 bg-white/5 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
@@ -185,14 +286,14 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <div className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-bold mb-3 text-white">
+                  <div className="p-4 sm:p-6 flex-1 flex flex-col">
+                    <h3 className="text-lg sm:text-xl font-bold mb-3 text-white">
                       {project.title}
                     </h3>
-                    <p className="text-gray-300 leading-relaxed mb-4 flex-1">
+                    <p className="text-sm sm:text-base text-gray-300 leading-relaxed mb-4 flex-1">
                       {project.description}
                     </p>
-                    <button className="text-white hover:text-purple-400 font-semibold transition-colors duration-300 flex items-center gap-2 mt-auto">
+                    <button className="text-white hover:text-purple-400 font-semibold transition-colors duration-300 flex items-center gap-2 mt-auto text-sm sm:text-base">
                       Learn More
                       <svg
                         className="w-4 h-4"
@@ -217,19 +318,19 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="services" className="relative z-10 px-6 py-20">
+      <section id="services" className="relative z-10 px-4 sm:px-6 py-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
               Our Expertise
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto px-4">
               Leveraging advanced AI and modern technology stack to deliver
               solutions that drive real business impact.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
             {[
               {
                 icon: "🧠",
@@ -268,9 +369,9 @@ export default function Home() {
                       : "bg-teal-500/10"
                   }`}
                 ></div>
-                <div className="relative p-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 h-full flex flex-col">
+                <div className="relative p-6 sm:p-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 h-full flex flex-col">
                   <div
-                    className={`text-4xl mb-4 p-3 rounded-lg w-fit ${
+                    className={`text-3xl sm:text-4xl mb-4 p-3 rounded-lg w-fit ${
                       feature.accent === "purple"
                         ? "bg-purple-600/20"
                         : "bg-teal-600/20"
@@ -278,10 +379,10 @@ export default function Home() {
                   >
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-bold mb-4 text-white">
+                  <h3 className="text-lg sm:text-xl font-bold mb-4 text-white">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-300 leading-relaxed flex-1">
+                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed flex-1">
                     {feature.description}
                   </p>
                 </div>
@@ -292,13 +393,13 @@ export default function Home() {
       </section>
 
       {/* Team Section */}
-      <section id="team" className="relative z-10 px-6 py-20">
+      <section id="team" className="relative z-10 px-4 sm:px-6 py-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
               Meet Our Team
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto px-4">
               World-class experts in AI, technology, and innovation working
               together to build the future.
             </p>
@@ -308,8 +409,8 @@ export default function Home() {
             {team.map((member, index) => (
               <div key={index} className="group relative max-w-sm">
                 <div className="absolute inset-0 bg-white/5 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
-                <div className="relative p-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105">
-                  <div className="w-24 h-24 bg-white rounded-full mx-auto mb-4 relative overflow-hidden p-1">
+                <div className="relative p-4 sm:p-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full mx-auto mb-4 relative overflow-hidden p-1">
                     <div className="w-full h-full bg-black rounded-full overflow-hidden">
                       <Image
                         src={member.image}
@@ -319,13 +420,13 @@ export default function Home() {
                       />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-center mb-2 text-white">
+                  <h3 className="text-lg sm:text-xl font-bold text-center mb-2 text-white">
                     {member.name}
                   </h3>
-                  <p className="bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent text-center mb-3 font-semibold">
+                  <p className="bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent text-center mb-3 font-semibold text-sm sm:text-base">
                     {member.role}
                   </p>
-                  <p className="text-gray-300 text-center text-sm leading-relaxed">
+                  <p className="text-gray-300 text-center text-xs sm:text-sm leading-relaxed">
                     {member.bio}
                   </p>
                   <div className="flex justify-center space-x-3 mt-4">
@@ -366,23 +467,23 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section id="contact" className="relative z-10 px-6 py-20">
+      <section id="contact" className="relative z-10 px-4 sm:px-6 py-20">
         <div className="max-w-4xl mx-auto text-center">
           <div className="relative">
             <div className="absolute inset-0 bg-white/5 rounded-3xl blur-3xl"></div>
-            <div className="relative p-12 bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            <div className="relative p-8 sm:p-12 bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
                 Ready to Transform Your Business?
               </h2>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                 Let&apos;s discuss how our AI-powered solutions can accelerate
                 your digital transformation.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-gray-200 transition-all duration-300 transform hover:scale-105">
+                <button className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-full font-semibold text-base sm:text-lg hover:bg-gray-200 transition-all duration-300 transform hover:scale-105">
                   Schedule Consultation
                 </button>
-                <button className="px-8 py-4 border-2 border-white/50 rounded-full text-white font-semibold text-lg hover:bg-white/10 hover:border-white transition-all duration-300">
+                <button className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-white/50 rounded-full text-white font-semibold text-base sm:text-lg hover:bg-white/10 hover:border-white transition-all duration-300">
                   View Case Studies
                 </button>
               </div>
@@ -392,38 +493,40 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 px-6 py-12 border-t border-white/10">
+      <footer className="relative z-10 px-4 sm:px-6 py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-4 mb-4 md:mb-0">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-xl flex items-center justify-center">
                 <svg
                   viewBox="0 0 24 24"
-                  className="w-6 h-6 text-black"
+                  className="w-5 h-5 sm:w-6 sm:h-6 text-black"
                   fill="currentColor"
                 >
                   <path d="M12 2L1 21h22L12 2z M12 6l7.5 13H4.5L12 6z M9 14h6v2H9v-2z M10 17h4v2h-4v-2z" />
                 </svg>
               </div>
-              <span className="text-xl font-bold text-white">Arkalith</span>
+              <span className="text-lg sm:text-xl font-bold text-white">
+                Arkalith
+              </span>
             </div>
 
             <div className="flex space-x-6">
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors duration-300"
+                className="text-gray-400 hover:text-white transition-colors duration-300 text-sm sm:text-base"
               >
                 Privacy
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors duration-300"
+                className="text-gray-400 hover:text-white transition-colors duration-300 text-sm sm:text-base"
               >
                 Terms
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors duration-300"
+                className="text-gray-400 hover:text-white transition-colors duration-300 text-sm sm:text-base"
               >
                 Contact
               </a>
@@ -431,7 +534,7 @@ export default function Home() {
           </div>
 
           <div className="mt-8 pt-8 border-t border-white/10 text-center text-gray-400">
-            <p>
+            <p className="text-sm sm:text-base">
               &copy; 2024 Arkalith. All rights reserved. Powering the future
               with intelligent technology.
             </p>
